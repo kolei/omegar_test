@@ -30,8 +30,8 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/anonymous node/sails user/sails_forum.git"
+    "url": "git://github.com/kolei/omegar_test.git"
   },
-  "author": "anonymous node/sails user",
+  "author": "kolei@yandex.ru",
   "license": ""
 }
