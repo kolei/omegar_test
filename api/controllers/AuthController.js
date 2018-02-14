@@ -8,19 +8,25 @@
 const passport = require('passport');
 
 module.exports = {
-	auth: function(req, res) {
-    passport.authenticate('local', function(err, user, info) {
-      if(err || !user){
-        return res.json(400, {
-          message: 'login failed'
-        });
-        //res.send(err);
+  login: function(req, res){
+    console.log('AuthController.login');
+    passport.authenticate('local', function(err, user, info){
+      if ((err) || (!user)){
+        console.log('AuthController.login auth error: %s', err);
+        res.send(err);
       }
-      req.logIn(user, function(err) {
-        if(err) res.json(400, err);
-        return res.ok();
-     });
+      req.logIn(user, function(err){
+        if (err) {
+          console.log('AuthController.login login error: %s', err);
+          res.send(err);
+        }
+        return res.send({ message: 'login successful' });
+      });
     })(req, res);
+  },
+  logout: function (req,res){
+    req.logout();
+    res.send('logout successful');
   }
 };
 

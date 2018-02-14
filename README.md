@@ -2,6 +2,8 @@
 
 [Sails](http://sailsjs.org) application
 
+https://github.com/mikedevita/sailsjs-v010-passport-local-mongo-email-activation.git
+
 REST API:
 
 Create user. Must be setted fields: email, username, password
