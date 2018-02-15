@@ -26,21 +26,28 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  '*': true,
+  //'*': true,
 
   AuthController: {
-    'post login': true,
-    'get logout': 'authenticated'
+    login: true,
+    logout: 'authenticated'
+  },
+
+  UserController: {
+    //disable GET requests
+    find: 'isAdmin',
+    findOne: false,
+    //Allow anyone to register a new user
+    create: true,           
+    //Updates allow only authenticated users
+    update: 'authenticated',
+    uploadAvatar: 'authenticated'
   }
 
   // MessageController: {
   //   '*': ['passport', 'sessionAuth'],
   // },
-  
-  // UserController: {
-  //   'update': false,
-  // }
-    
+ 
   /***************************************************************************
   *                                                                          *
   * Here's an example of mapping some policies to run before a controller    *

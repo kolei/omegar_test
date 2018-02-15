@@ -9,24 +9,25 @@ const passport = require('passport');
 
 module.exports = {
   login: function(req, res){
-    console.log('AuthController.login');
+    sails.log('AuthController.login');
     passport.authenticate('local', function(err, user, info){
-      if ((err) || (!user)){
-        console.log('AuthController.login auth error: %s', err);
-        res.send(err);
+      if(err || !user){
+        sails.log('AuthController.login auth error: %s', err);
+        //Unauthorized
+        return res.json(401, err);
       }
       req.logIn(user, function(err){
-        if (err) {
-          console.log('AuthController.login login error: %s', err);
-          res.send(err);
+        if(err) {
+          sails.log('AuthController.login login error: %s', err);
+          res.json(401, err);
         }
-        return res.send({ message: 'login successful' });
+        return res.json(user);
       });
     })(req, res);
   },
   logout: function (req,res){
     req.logout();
-    res.send('logout successful');
+    res.json('logout successful');
   }
 };
 

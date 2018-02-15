@@ -3,7 +3,7 @@ var passport      = require('passport'),
 
 module.exports = {
 
- express: {
+  http: {
     customMiddleware: function(app){
       console.log('express midleware for passport');
       app.use(passport.initialize());

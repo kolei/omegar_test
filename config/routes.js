@@ -46,18 +46,15 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  'post /login': {
-    controller: 'AuthController',
-    action: 'login'
-  },
-  'get /logout': {
-    controller: 'AuthController',
-    action: 'logout'
-  },
-  
+  //create user
+  'post /user':  {controller: 'UserController', action:'create'},
+  'put /user':   {controller: 'UserController', action:'update'},
+  //'delete /user':{controller: 'UserController', action:'delete'},
+
+  //upload user avatar
+  'post /user/avatar': {controller: 'UserController', action:'uploadAvatar'},
+
   //authenticate user
-//  'POST /auth': {
-//     controller: 'AuthController',
-//     action: 'auth'
-//   }
+  '/login':  {controller: 'AuthController', action: 'login'},
+  '/logout': {controller: 'AuthController', action: 'logout'}
 };

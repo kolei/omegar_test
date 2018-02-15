@@ -25,6 +25,13 @@ module.exports = {
   beforeCreate: function (values, next) {
     values.password = crypto.createHash('md5').update(values.password).digest("hex");
     next();  	
+  },
+ 
+  beforeUpdate: function (values, next) {
+    //encrypt password if its updated
+    if(values.password)  
+      values.password = crypto.createHash('md5').update(values.password).digest("hex");
+    next();  	
   }
 };
 

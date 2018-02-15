@@ -2,9 +2,10 @@
 * Allow any authenticated user.
 */
 module.exports = function(req, res, next){
-  if (req.isAuthenticated()){
+  if (req.user){
+    sails.log('authenticated.js user valid: %j', req.user);
     return next();
-  }else{
-    return res.send(403, { message: 'Not Authorized' });
   }
+  else 
+    return res.json(403, { message: 'Not Authorized' });
 }

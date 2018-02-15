@@ -6,6 +6,11 @@ https://github.com/mikedevita/sailsjs-v010-passport-local-mongo-email-activation
 
 REST API:
 
+post  - create
+get   - read
+put   - update
+delete- delete
+
 Create user. Must be setted fields: email, username, password
 email is unical field
 minimal password length = 6
