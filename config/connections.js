@@ -48,6 +48,8 @@ module.exports.connections = {
   //   database: 'YOUR_MYSQL_DB' //optional
   // },
 
+  default: 'someMongodbServer',
+
   /***************************************************************************
   *                                                                          *
   * MongoDB is the leading NoSQL database.                                   *
@@ -89,4 +91,8 @@ module.exports.connections = {
   *                                                                          *
   ***************************************************************************/
 
+  //adapter for test only
+  testMemoryDb: {
+    adapter: 'sails-memory'
+  },
 };

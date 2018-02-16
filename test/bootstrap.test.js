@@ -2,22 +2,23 @@
  * Auto start/stop sails before/after any test
  */
 
-let sails = require('sails');
+var sails = require('sails');
 
-// before(function(done) {
-//   // Increase the Mocha timeout so that Sails has enough time to lift.
-//   this.timeout(5000);
+before(function(done) {
+  // Increase the Mocha timeout so that Sails has enough time to lift.
+  this.timeout(15000);
 
-  // sails.lift({
-  //   // configuration for testing purposes
-  // }, function(err) {
-  //   if (err) return done(err);
-  //   // here you can load fixtures, etc.
-  //   done(err, sails);
-  // });
-// });
+  sails.lift({
+    // configuration for testing purposes
+    models: {connection: 'testMemoryDb'}
+  }, function(err) {
+    if (err) return done(err);
+    // here you can load fixtures, etc.
+    done(err, sails);
+  });
+});
 
-// after(function(done) {
-//   // here you can clear fixtures, etc.
-//   // sails.lower(done);
-// });
+after(function(done) {
+  // here you can clear fixtures, etc.
+  sails.lower(done);
+});

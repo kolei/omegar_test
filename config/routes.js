@@ -48,13 +48,16 @@ module.exports.routes = {
 
   //create user
   'post /user':  {controller: 'UserController', action:'create'},
+
+  //update user
   'put /user':   {controller: 'UserController', action:'update'},
   //'delete /user':{controller: 'UserController', action:'delete'},
 
-  //upload user avatar
-  'post /user/avatar': {controller: 'UserController', action:'uploadAvatar'},
-
   //authenticate user
-  '/login':  {controller: 'AuthController', action: 'login'},
-  '/logout': {controller: 'AuthController', action: 'logout'}
+  '/user/login':  {controller: 'UserController', action: 'login'},
+  '/user/logout': {controller: 'UserController', action: 'logout'},
+
+  //upload user avatar
+  'post /user/avatar': {controller: 'UserController', action:'uploadAvatar'}
+
 };

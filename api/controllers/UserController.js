@@ -5,6 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+const passport = require('passport');
+
 module.exports = {
 /**
 +регистрация нового пользователя (email, username, пароль).
@@ -94,7 +96,28 @@ module.exports = {
         return res.ok();
       });
     });
-  }
+  },
   
+  login: function(req, res){
+    passport.authenticate('local', function(err, user, info){
+      if(err || !user){
+        // sails.log('AuthController.login auth error: %s', err);
+        //Unauthorized
+        return res.json(401, err);
+      }
+      req.logIn(user, function(err){
+        if(err) {
+          // sails.log('AuthController.login login error: %s', err);
+          res.json(401, err);
+        }
+        return res.json(user);
+      });
+    })(req, res);
+  },
+
+  logout: function (req,res){
+    req.logout();
+    res.json('logout successful');
+  }  
 };
 

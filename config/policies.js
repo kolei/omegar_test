@@ -28,11 +28,6 @@ module.exports.policies = {
 
   //'*': true,
 
-  AuthController: {
-    login: true,
-    logout: 'authenticated'
-  },
-
   UserController: {
     //disable GET requests
     find: 'isAdmin',
@@ -41,7 +36,9 @@ module.exports.policies = {
     create: true,           
     //Updates allow only authenticated users
     update: 'authenticated',
-    uploadAvatar: 'authenticated'
+    uploadAvatar: 'authenticated',
+    login: true,
+    logout: 'authenticated'
   }
 
   // MessageController: {
