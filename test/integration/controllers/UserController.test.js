@@ -7,10 +7,10 @@ beforeEach(function () {
 });
 
 describe('UserController', function() {
-  describe('#login()', function() {
-    it('should login user', function (done) {
-      testSession.post('/user/login')
-        .send({ email: 'kolei@yandex.ru', password: '123456' })
+  describe('#create()', function() {
+    it('should create user', function (done) {
+      testSession.post('/user')
+        .send({ email: 'kolei@yandex.ru', password: '123456',username:'Evgeny' })
         .expect(200)
         .end(function (err) {
           if (err) return done(err);
@@ -20,18 +20,10 @@ describe('UserController', function() {
     });
   });
 
-  describe('#logout()', function() {
-    it('should logout user', function (done) {
-      authenticatedSession.get('/user/logout')
-        // .send({ email: 'kolei@yandex.ru', password: '123456' })
-        .expect(200, done);
-    });
-  });
-
-  describe('#create()', function() {
-    it('should create user', function (done) {
-      testSession.post('/user')
-        .send({ email: 'keilance@mail.ru', password: '123456',username:'Evgeny' })
+  describe('#login()', function() {
+    it('should login user', function (done) {
+      testSession.post('/user/login')
+        .send({ email: 'kolei@yandex.ru', password: '123456' })
         .expect(200)
         .end(function (err) {
           if (err) return done(err);
@@ -50,4 +42,12 @@ describe('UserController', function() {
     });
   });
 
+  describe('#logout()', function() {
+    it('should logout user', function (done) {
+      authenticatedSession.get('/user/logout')
+        // .send({ email: 'kolei@yandex.ru', password: '123456' })
+        .expect(200, done);
+    });
+  });
+  
 });
