@@ -10,6 +10,19 @@
  * http://sailsjs.org/#!/documentation/concepts/Logging
  */
 
+var winston = require('winston');
+
+var logger = new(winston.Logger)({
+  transports: [
+    new (winston.transports.File)({
+      filename: 'logs/sails.log',
+      level: 'silly',
+      colorize: false,
+      json: false
+    })
+  ]
+});
+
 module.exports.log = {
 
   /***************************************************************************
@@ -24,6 +37,7 @@ module.exports.log = {
   *                                                                          *
   ***************************************************************************/
 
-  // level: 'info'
-
+  level: 'debug',
+  colorize: false,
+  custom: logger
 };

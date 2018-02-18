@@ -26,7 +26,8 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  //'*': true,
+  //Only explicitly described methods are allowed
+  '*': false,
 
   UserController: {
     //disable GET requests
@@ -38,12 +39,28 @@ module.exports.policies = {
     update: 'authenticated',
     uploadAvatar: 'authenticated',
     login: true,
-    logout: 'authenticated'
-  }
+    logout: 'authenticated',
+    forgotPassword: true,
+    activate: true,
+  },
 
-  // MessageController: {
-  //   '*': ['passport', 'sessionAuth'],
-  // },
+  ThemeController: {
+    find: true,
+    findOne: false,
+    create: 'authenticated',
+    update: 'authenticated',
+    delete: 'authenticated',
+  },
+
+  MessageController: {
+    find: true,
+    findOne: true,
+    create: 'authenticated',
+    update: 'authenticated',
+    delete: 'authenticated',
+    like:   'authenticated',
+    dislike:'authenticated',
+  },
  
   /***************************************************************************
   *                                                                          *

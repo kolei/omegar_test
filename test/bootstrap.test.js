@@ -10,8 +10,10 @@ before(function(done) {
 
   sails.lift({
     // configuration for testing purposes
-    models: {connection: 'testMemoryDb'}
-  }, function(err) {
+    models: {connection: 'testMemoryDb'},
+    //activation code used in tests
+    testActivateCode: '1234567890'
+}, function(err) {
     if (err) return done(err);
     // here you can load fixtures, etc.
     done(err, sails);

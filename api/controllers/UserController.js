@@ -5,16 +5,12 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-const passport = require('passport');
+const passport = require('passport'),
+      nodemailer = require('nodemailer'),
+      crypto = require('crypto');
 
 module.exports = {
-/**
-+регистрация нового пользователя (email, username, пароль).
-+авторизация пользователя (email, пароль).
-смена (восстановление) пароля - послать мыло с кодом авторизации
-+смена username;
-  загрузка аватарки.
-*/
+
   create: function (req, res) {
     let elem = {
       email: req.param('email'),
@@ -24,35 +20,18 @@ module.exports = {
 
     User.create(elem).exec(function (err, user) {
       if (err){ 
-        sails.log('UserController.create error: %s', err);
-        res.send(400, err); 
+        sails.log.debug('UserController.create error: %s', err);
+        res.json(400, err); 
       }
-      else{
-        // if(sails.config.user.requireUserActivation){
-        //   var emailTemplate = res.render('email/email.ejs', {user: user}, function(err, list){  
-
-        //     nodemailer.send({
-        //       name:       user.firstName + ' ' + user.lastName,
-        //       from:       sails.config.nodemailer.from,
-        //       to:         user.email,
-        //       subject:       'New Account Acivation Required',
-        //       messageHtml: list
-        //     }, function(err, response){
-        //       sails.log.debug('nodemailer sent', err, response);
-        //     });
-        //     res.send(200, user);
-
-        //   });
-        // }else
-          res.json(200, user);
-      }
+      else
+        res.json(200, user);
     });
   },
   
   update: function (req, res) {
     let id = req.user.id;
   
-    sails.log('UserController.update id: %s', id);
+    sails.log.debug('UserController.update id: %s', id);
 
     let elem = {};
 
@@ -92,13 +71,14 @@ module.exports = {
         avatarFd: uploadedFiles[0].fd
       })
       .exec(function (err){
-        if (err) return res.negotiate(err);
+        if (err) return res.json(400,err);
         return res.ok();
       });
     });
   },
   
   login: function(req, res){
+    sails.log.debug('UserController.login...');
     passport.authenticate('local', function(err, user, info){
       if(err || !user){
         // sails.log('AuthController.login auth error: %s', err);
@@ -108,7 +88,7 @@ module.exports = {
       req.logIn(user, function(err){
         if(err) {
           // sails.log('AuthController.login login error: %s', err);
-          res.json(401, err);
+          return res.json(401, err);
         }
         return res.json(user);
       });
@@ -118,6 +98,84 @@ module.exports = {
   logout: function (req,res){
     req.logout();
     res.json('logout successful');
-  }  
+  },
+  
+  forgotPassword: function(req, res){
+    sails.log.debug('UserController.forgotPassword...');
+    let email = req.param('email');
+    if(email){
+      User.findOne({email}, function(err, user) {
+        if(err) return res.json(400, err);
+        if(user){
+          sails.log.debug('UserController.forgotPassword found user: %j', user);
+          
+          let activateCode;
+
+          //в тестовом режиме используем константу
+          if(sails.config.testActivateCode) activateCode = sails.config.testActivateCode;
+          else activateCode = crypto.createHash('md5').update( (new Date()).toString() ).digest("hex"); 
+
+          User.update(user.id, {activateCode}).exec((err, userU)=>{
+            if(err) return res.json(400, err);
+
+            if(sails.config.testActivateCode) return res.ok();
+            else{
+              if(sails.config.smtp){
+                sails.log.debug('has smtp: %j', sails.config.smtp);
+    
+                let transport = nodemailer.createTransport(sails.config.smtp.transport);
+                
+                // setup email data with unicode symbols
+                let mailOptions = {
+                  from: sails.config.smtp.from,
+                  to: email,
+                  subject: 'Activation code',
+                  text: 'You activation code: '+activateCode, 
+                };
+                
+                // send mail with defined transport object
+                transport.sendMail(mailOptions, (error, info) => {
+                  transport.close();
+                  if (error) {
+                    sails.log.debug('UserController.forgotPassword sendMail error: %s', error);
+                    return res.json(400, error);
+                  }
+                  return res.ok();
+                });
+              }
+              else
+                return res.json(400, 'No smpt settings');
+            }
+          });
+        }
+        else
+          return res.json(400, 'Account not found');       
+      });
+    }
+  },
+
+  activate: function(req, res){
+    sails.log.debug('UserController.activate...');
+    let email = req.param('email'),
+        activateCode = req.param('activateCode'),
+        password = req.param('password');
+
+    User.findOne({email}, function(err, user) {
+      if(err) return res.json(400, err);
+      if(user){
+        sails.log.debug('UserController.activate found user: %j', user);
+        if(activateCode==user.activateCode){
+          User.update(user.id, {password}, function(err2, user2){
+            if(err2) res.json(400, err);
+            res.ok();
+          });
+        }
+        else
+          res.json(400, 'Bad activate code');
+      }
+      else
+        return res.json(400, 'Account not found');       
+    });        
+  }
 };
 

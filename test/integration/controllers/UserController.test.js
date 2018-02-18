@@ -45,7 +45,31 @@ describe('UserController', function() {
   describe('#logout()', function() {
     it('should logout user', function (done) {
       authenticatedSession.get('/user/logout')
-        // .send({ email: 'kolei@yandex.ru', password: '123456' })
+        .expect(200, done);
+    });
+  });
+  
+  describe('#forgotPassword()', function() {
+    this.timeout(20000);
+    it('should send mail with activate code', function (done) {
+      testSession.post('/user/forgot_password')
+        .send({ email: 'kolei@yandex.ru' })
+        .expect(200, done);
+    });
+  });
+  
+  describe('#activate()', function() {
+    it('should activate account', function (done) {
+      testSession.post('/user/activate')
+        .send({ email: 'kolei@yandex.ru', activateCode:sails.config.testActivateCode, password: '123457'})
+        .expect(200, done);
+    });
+  });
+
+  describe('#login()', function() {
+    it('should login with new password', function (done) {
+      testSession.post('/user/login')
+        .send({ email: 'kolei@yandex.ru', password: '123457' })
         .expect(200, done);
     });
   });

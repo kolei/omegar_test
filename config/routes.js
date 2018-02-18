@@ -48,16 +48,43 @@ module.exports.routes = {
 
   //create user
   'post /user':  {controller: 'UserController', action:'create'},
-
   //update user
   'put /user':   {controller: 'UserController', action:'update'},
-  //'delete /user':{controller: 'UserController', action:'delete'},
-
   //authenticate user
   '/user/login':  {controller: 'UserController', action: 'login'},
   '/user/logout': {controller: 'UserController', action: 'logout'},
-
   //upload user avatar
-  'post /user/avatar': {controller: 'UserController', action:'uploadAvatar'}
+  'post /user/avatar': {controller: 'UserController', action:'uploadAvatar'},
+  //generate activate code and send to email
+  'post /user/forgot_password': {controller: 'UserController', action:'forgotPassword'},
+  'post /user/activate': {controller: 'UserController', action:'activate'},
 
+
+  //create theme
+  'post /theme': {controller: 'ThemeController', action:'create'},
+  //show themes list with pagination
+  'get  /theme/:from/:limit': {controller: 'ThemeController', action:'find'},
+  'post /theme/:from/:limit': {controller: 'ThemeController', action:'find'},
+  'get  /theme/:from': {controller: 'ThemeController', action:'find'},
+  'post /theme/:from': {controller: 'ThemeController', action:'find'},
+  //update theme
+  'put /theme/:id': {controller: 'ThemeController', action:'update'},
+  //delete theme
+  'delete /theme/:id': {controller: 'ThemeController', action:'delete'},
+
+
+  //create message
+  'post /message/:theme': {controller: 'MessageController', action:'create'},
+  //show message list with pagination
+  'get  /message/:theme/:from/:limit': {controller: 'MessageController', action:'find'},
+  'post /message/:theme/:from/:limit': {controller: 'MessageController', action:'find'},
+  'get  /message/:theme/:from': {controller: 'MessageController', action:'find'},
+  'post /message/:theme/:from': {controller: 'MessageController', action:'find'},
+  'get  /message/:theme': {controller: 'MessageController', action:'find'},
+  //update message
+  'put /message/:id': {controller: 'MessageController', action:'update'},
+  //delete message
+  'delete /message/:id': {controller: 'MessageController', action:'delete'},
+
+  
 };
