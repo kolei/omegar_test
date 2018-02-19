@@ -12,6 +12,17 @@ const passport = require('passport'),
 module.exports = {
 
   create: function (req, res) {
+    try{
+      req.validate({
+        email:    'email',
+        username: 'string',
+        password: 'string'
+      });
+    }catch(err){
+      sails.log.debug(err);
+      return res.json(400, 'bad params');
+    }
+
     let elem = {
       email: req.param('email'),
       username: req.param('username'),
@@ -29,11 +40,8 @@ module.exports = {
   },
   
   update: function (req, res) {
-    let id = req.user.id;
-  
-    sails.log.debug('UserController.update id: %s', id);
-
-    let elem = {};
+    let id = req.user.id,
+        elem = {};
 
     //update only supported fields
     if(req.param('email')) elem.email = req.param('email');
@@ -48,48 +56,56 @@ module.exports = {
   },
   
   uploadAvatar: function (req, res) {
-    sails.log('UserController.uploadAvatar');
+    var fileName;
+
     req.file('avatar').upload({
       // don't allow the total upload size to exceed ~1MB
-      maxBytes: 1000000
-    },function whenDone(err, uploadedFiles) {
-      if(err){
-        return res.json(400, err);
+      maxBytes: 50000,
+      //dirname: require('path').resolve(sails.config.appPath, 'assets/images'),
+      saveAs: function(file, cb){
+        let extension = file.filename.split('.').pop();
+        fileName = req.user.id+'.'+extension;
+        cb(null, require('path').resolve(sails.config.appPath, 'assets/images')+'/'+fileName);
       }
-  
+    },function whenDone(err, uploadedFiles) {
+      if(err) return res.json(400, err);
+
       // If no files were uploaded, respond with an error.
       if(uploadedFiles.length === 0)
         return res.badRequest('No file was uploaded');
-  
+
+      //sails.log.debug('file name: %s', uploadedFiles[0]);  
+
       // Save the "fd" and the url where the avatar for a user can be accessed
       User.update(req.user.id, {
-  
         // Generate a unique URL where the avatar can be downloaded.
-        avatarUrl: require('util').format('%s/user/avatar/%s', sails.config.appUrl, req.user.id),
-  
-        // Grab the first file and use it's `fd` (file descriptor)
-        avatarFd: uploadedFiles[0].fd
+        avatarUrl: require('util').format('%s/images/%s', sails.getBaseurl(), fileName),
       })
-      .exec(function (err){
+      .exec(function (err, user){
         if (err) return res.json(400,err);
-        return res.ok();
+        res.ok();
       });
     });
   },
   
   login: function(req, res){
-    sails.log.debug('UserController.login...');
+    try{
+      req.validate({
+        email:    'email',
+        password: 'string'
+      });
+    }catch(err){
+      sails.log.debug(err);
+      return res.json(400, 'bad params');
+    }
+    
     passport.authenticate('local', function(err, user, info){
       if(err || !user){
-        // sails.log('AuthController.login auth error: %s', err);
         //Unauthorized
         return res.json(401, err);
       }
       req.logIn(user, function(err){
-        if(err) {
-          // sails.log('AuthController.login login error: %s', err);
-          return res.json(401, err);
-        }
+        if(err) return res.json(401, err);
         return res.json(user);
       });
     })(req, res);
@@ -97,11 +113,19 @@ module.exports = {
 
   logout: function (req,res){
     req.logout();
-    res.json('logout successful');
+    return res.json('logout successful');
   },
   
   forgotPassword: function(req, res){
-    sails.log.debug('UserController.forgotPassword...');
+    try{
+      req.validate({
+        email:    'email',
+      });
+    }catch(err){
+      sails.log.debug(err);
+      return res.json(400, 'bad params');
+    }
+
     let email = req.param('email');
     if(email){
       User.findOne({email}, function(err, user) {
@@ -155,7 +179,17 @@ module.exports = {
   },
 
   activate: function(req, res){
-    sails.log.debug('UserController.activate...');
+    try{
+      req.validate({
+        email:    'email',
+        activateCode: 'string',
+        password: 'string'
+      });
+    }catch(err){
+      sails.log.debug(err);
+      return res.json(400, 'bad params');
+    }
+
     let email = req.param('email'),
         activateCode = req.param('activateCode'),
         password = req.param('password');

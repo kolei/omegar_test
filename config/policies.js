@@ -58,10 +58,13 @@ module.exports.policies = {
     create: 'authenticated',
     update: 'authenticated',
     delete: 'authenticated',
-    like:   'authenticated',
-    dislike:'authenticated',
   },
  
+  LikeController:{
+    create: 'authenticated',
+    delete: 'authenticated',
+  },
+
   /***************************************************************************
   *                                                                          *
   * Here's an example of mapping some policies to run before a controller    *

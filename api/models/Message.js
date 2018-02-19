@@ -10,6 +10,6 @@ module.exports = {
     themeId:{type:'string',required: true},
     title:  {type:'string',required: true},
     body:   {type:'text',required: true},
-    owner:  {type:'string',required: true},
+    owner:  {model:'user'},
   },
 };

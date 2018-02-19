@@ -7,7 +7,7 @@
 
 module.exports = {
   attributes: {
-    messageId:{type:'string',required: true},
-    userId:   {type:'string',required: true},
+    message:{type:'string',required: true},
+    owner:  {type:'string',required: true},
   },
 };

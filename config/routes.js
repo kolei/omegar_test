@@ -59,7 +59,6 @@ module.exports.routes = {
   'post /user/forgot_password': {controller: 'UserController', action:'forgotPassword'},
   'post /user/activate': {controller: 'UserController', action:'activate'},
 
-
   //create theme
   'post /theme': {controller: 'ThemeController', action:'create'},
   //show themes list with pagination
@@ -71,7 +70,6 @@ module.exports.routes = {
   'put /theme/:id': {controller: 'ThemeController', action:'update'},
   //delete theme
   'delete /theme/:id': {controller: 'ThemeController', action:'delete'},
-
 
   //create message
   'post /message/:theme': {controller: 'MessageController', action:'create'},
@@ -86,5 +84,7 @@ module.exports.routes = {
   //delete message
   'delete /message/:id': {controller: 'MessageController', action:'delete'},
 
-  
+  //like/dislike messages
+  'post /like/:message': {controller: 'LikeController', action:'create'},
+  'delete /like/:message': {controller: 'LikeController', action:'delete'},
 };

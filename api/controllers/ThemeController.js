@@ -8,6 +8,15 @@
 module.exports = {
 
   create: function (req, res) {
+    try{
+      req.validate({
+        title: 'string',
+      });
+    }catch(err){
+      sails.log.debug(err);
+      return res.json(400, 'bad params');
+    }
+
     let elem = {
       title: req.param('title'),
       owner: req.user.id
@@ -27,17 +36,28 @@ module.exports = {
     let skip = (req.param('from') || 1)-1,
         limit = req.param('limit') || 20;
 
-    Theme.find({skip,limit}).exec(function(err, list){
-      if (err){ 
-        sails.log.debug('ThemeController.find error: %s', err);
-        res.json(400, err); 
-      }
-      else
-        res.json(200, list);
-    });
+    Theme.find({skip,limit})
+      .populate('owner'/*, {select:['avatar']}*/)
+      .exec(function(err, list){
+        if (err){ 
+          sails.log.debug('ThemeController.find error: %s', err);
+          res.json(400, err); 
+        }
+        else
+          res.json(200, list);
+      });
   },
 
   delete: function(req, res){
+    try{
+      req.validate({
+        id: 'string',
+      });
+    }catch(err){
+      sails.log.debug(err);
+      return res.json(400, 'bad params');
+    }
+
     let themeId = req.param('id');
     Theme.findOne({id:themeId}).exec((err, theme)=>{
       if(err){
@@ -76,6 +96,16 @@ module.exports = {
   },
 
   update: function(req, res){
+    try{
+      req.validate({
+        id: 'string',
+        title: 'string',
+      });
+    }catch(err){
+      sails.log.debug(err);
+      return res.json(400, 'bad params');
+    }
+
     let themeId = req.param('id'),
         title = req.param('title');
     Theme.findOne({id:themeId}).exec((err, theme)=>{

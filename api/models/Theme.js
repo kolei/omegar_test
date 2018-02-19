@@ -8,6 +8,9 @@
 module.exports = {
   attributes: {
     title:{type:'string',required: true},
-    owner:{type:'string',required: true},
+    //owner:{type:'string',required: true},
+    owner:{
+      model:'user',
+    }
   },
 };

@@ -70,6 +70,19 @@ describe('UserController', function() {
     it('should login with new password', function (done) {
       testSession.post('/user/login')
         .send({ email: 'kolei@yandex.ru', password: '123457' })
+        .expect(200)
+        .end(function (err) {
+          if (err) return done(err);
+          authenticatedSession = testSession;
+          return done();
+        });
+    });
+  });
+
+  describe('#uploadAvatar()', function() {
+    it('should upload avatar', function (done) {
+      authenticatedSession.post('/user/avatar')
+        .attach('avatar', 'test/avatar.png')
         .expect(200, done);
     });
   });

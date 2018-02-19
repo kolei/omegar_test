@@ -18,7 +18,7 @@ module.exports = {
       let obj = this.toObject();
       delete obj.password;
       return obj;
-    }
+    },
   },
 
   // encrypt password

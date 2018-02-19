@@ -6,6 +6,8 @@ gulp.task("test", function() {
       "./test/bootstrap.test.js",
       "./test/integration/controllers/UserController.test.js",
       "./test/integration/controllers/ThemeController.test.js",
+      "./test/integration/controllers/MessageController.test.js",
+      "./test/integration/controllers/LikeController.test.js",
     ])
     .pipe(mocha());
 });

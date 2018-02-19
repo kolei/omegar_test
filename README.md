@@ -16,3 +16,4 @@ email is unical field
 minimal password length = 6
 POST localhost:1337/user
 
+!! выдача одиночного сообщения

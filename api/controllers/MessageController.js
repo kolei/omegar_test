@@ -5,6 +5,16 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+async function getLikes(messageId){
+  return new Promise((resolve, reject)=>{
+    Like.count({message: messageId}).exec((err, count)=>{
+      if(err) resolve(0);
+      else resolve(count);
+    });
+  });
+}
+
+
 module.exports = {
   
     create: function (req, res) {
@@ -24,19 +34,31 @@ module.exports = {
           res.json(200, message);
       });
     },
-  
+
     find: function(req, res){
       let skip = (req.param('from') || 1)-1,
-          limit = req.param('limit') || 20;
-  
-      Message.find({skip,limit}).exec(function(err, list){
-        if (err){ 
-          sails.log.debug('MessageController.find error: %s', err);
-          res.json(400, err); 
-        }
-        else
-          res.json(200, list);
-      });
+          limit = req.param('limit') || 20,
+          themeId = req.param('theme');
+
+      //sails.log.debug('find themeid: %s', themeId);
+
+      Message.find({skip,limit,where:{themeId}})
+        .populate('owner')
+        .exec(async(err, list)=>{
+          if (err){ 
+            sails.log.debug('MessageController.find error: %s', err);
+            res.json(400, err); 
+          }
+          else{
+            try{
+              for(let i=0;i<list.length;i++)
+                list[i].likes = await getLikes(list[i].id);
+            }catch(e){
+              //
+            }
+            res.json(200, list);
+          }
+        });
     },
   
     delete: function(req, res){
@@ -72,8 +94,12 @@ module.exports = {
       if(req.param('title')) elem.title = req.param('title');
       if(req.param('body')) elem.body = req.param('body');
 
-      Theme.update({id:messageId, owner:req.user.id}, elem).exec((err, message)=>{
-        if(err2) res.json(400, err2);
+      Message.update({id:messageId, owner:req.user.id}, elem).exec((err, message)=>{
+        if(err) return res.json(400, err);
+
+        sails.log.debug('%j', message);
+        
+        if(message.length==0) res.json(400, 'not owner');
         else res.ok();
       });
     },
