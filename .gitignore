@@ -67,7 +67,7 @@ config/local.js
 ################################################
 
 node_modules
-logs
+logs/*.log
 bower_components
 assets/images
 

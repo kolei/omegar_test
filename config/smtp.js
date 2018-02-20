@@ -1,3 +1,6 @@
+/** 
+ * Settings for nodemailer (send email)
+*/
 module.exports.smtp = null;
 // {
 //   transport:{

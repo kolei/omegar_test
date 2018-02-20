@@ -41,8 +41,10 @@ module.exports = {
         sails.log.debug('UserController.create error: %s', err);
         return res.json(400, {error:err}); 
       }
-      else
+      else{
+        sails.log.debug('UserController.create: %j', user);
         return res.json(200, user);
+      }
     });
   },
   
@@ -64,6 +66,7 @@ module.exports = {
     //try update
     User.update(id, elem).exec(function(err, user) {
       if(err) return res.json(400, {error:err});
+      sails.log.debug('UserController.update: %j', user);
       return res.json(user);
     });
   
@@ -128,6 +131,7 @@ module.exports = {
       }
       req.logIn(user, function(err){
         if(err) return res.json(401, {error:err});
+        sails.log.debug('UserController.login: %j', user);
         return res.json(200, user);
       });
     })(req, res);
