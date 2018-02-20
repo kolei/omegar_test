@@ -168,7 +168,7 @@ errors (HttpResult: 400, 404):
 
 #### Create theme (only authenticated users)
 ``` 
-POST /theme'
+POST /theme
 
 params: 
   title=theme title
