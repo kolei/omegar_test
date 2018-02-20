@@ -78,7 +78,8 @@ module.exports.routes = {
   'post /message/:theme/:from/:limit': {controller: 'MessageController', action:'find'},
   'get  /message/:theme/:from': {controller: 'MessageController', action:'find'},
   'post /message/:theme/:from': {controller: 'MessageController', action:'find'},
-  'get  /message/:theme': {controller: 'MessageController', action:'find'},
+  //get single message
+  'get  /message/:id': {controller: 'MessageController', action:'findOne'},
   //update message
   'put /message/:id': {controller: 'MessageController', action:'update'},
   //delete message

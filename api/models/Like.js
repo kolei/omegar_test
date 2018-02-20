@@ -2,6 +2,7 @@
  * Like.js
  *
  * @description :: Likes for messages
+ *                 User can "like" one message once
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
