@@ -103,7 +103,7 @@ describe('ThemeController', function() {
     it('should not update theme if no owner', function (done) {
       authenticatedSession.put('/theme/'+themeId)
         .send({ title: 'theme no 1 updated' })
-        .expect(400, done);
+        .expect(403, done);
     });
   });
   

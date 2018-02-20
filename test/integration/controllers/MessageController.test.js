@@ -44,11 +44,11 @@ describe('MessageController', function() {
 
   describe('#find()', function() {
     it('should found message', function (done) {
-      authenticatedSession.get('/message/'+themeId)
+      authenticatedSession.get('/message/'+themeId+'/1')
         .expect(200)
         .end(function (err, res) {
           if (err) return done(err);
-          if(Object.keys(res.body).length != 1) return done('Expect 1 message');
+          if(Object.keys(res.body).length < 1) return done('Expect 1 message');
           messageId = res.body[0].id;
           return done();
         });
@@ -80,7 +80,7 @@ describe('MessageController', function() {
 
   describe('#find()', function() {
     it('should found message', function (done) {
-      authenticatedSession.get('/message/'+themeId)
+      authenticatedSession.get('/message/'+themeId+'/1')
         .expect(200)
         .end(function (err, res) {
           if (err) return done(err);
@@ -109,7 +109,7 @@ describe('MessageController', function() {
     it('should not update message if no owner', function (done) {
       authenticatedSession.put('/message/'+messageId)
         .send({ title: 'message no 2 updated' })
-        .expect(400, done);
+        .expect(403, done);
     });
   });
   

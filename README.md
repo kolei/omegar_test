@@ -4,9 +4,9 @@ The application is executed on the [Sails.js](http://sailsjs.org) framework
 
 ## Installation
 
-For the server to work, you need to install the Git, Node.js and the Sails.js frameworks
+For the server to work, you need to install the Node.js, MongoDB and the Sails.js frameworks
 
-First clone repository
+First clone repository (need Git)
 ```
 git clone https://github.com/kolei/omegar_test.git
 ```
@@ -35,6 +35,8 @@ Then run tests by command
 ```
 gulp test
 ``` 
+
+NOTE: In the operating mode, the MongoDB database is used, but in the test mode it is used 'sails-memory' connection
 
 ## API
 
@@ -325,7 +327,7 @@ result (HttpResult: 200):
     "id": "5a8c61383791d120a0b3eb50",
     "likes": 0
   }
-  
+
 errors (HttpResult: 400):  
   {error:'error description'}
 ```

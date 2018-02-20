@@ -36,7 +36,7 @@ describe('LikeController', function() {
   
   describe('#find()', function() {
     it('should found message', function (done) {
-      authenticatedSession.get('/message/'+themeId)
+      authenticatedSession.get('/message/'+themeId+'/1')
         .expect(200)
         .end(function (err, res) {
           if (err) return done(err);
@@ -64,7 +64,7 @@ describe('LikeController', function() {
   describe('#like()', function() {
     it('should not like message unauthorized user', function (done) {
       testSession.post('/like/'+messageId)
-        .expect(403, done);
+        .expect(401, done);
     });
   });
   
